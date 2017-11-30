@@ -1,5 +1,5 @@
 # rabbitmq
-### Pubisher confirms
+### Pubisher confirms and mandatory flag
 
 **1. transient (non persistent) message is confirmed (Acked) the moment it is enqueued**
 ```
