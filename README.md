@@ -67,3 +67,11 @@ channel.publish(config.EX.name, routingKey, content, {mandatory: true}, onConfir
 **3. Persistent message is confirmed when it is persisted to disk or when it is enqueued**
 
 Only the first causes a confirm to be sent. Every published message will be confirmed sooner or later and no message will be confirmed more than once
+
+### Alternate exchanges
+[01/12/2017 14:21:06.503] [LOG]   Consumer connected, awaiting for messages
+[01/12/2017 14:21:15.171] [LOG]   Publisher connected
+[01/12/2017 14:21:15.172] [LOG]   Publisher about to publish message
+[01/12/2017 14:21:15.175] [LOG]   Unroutable message received test
+
+Now when publishing with mandatory: true, Basic.Return wont be issued to publisher. So registering event handler for `return` on given channel will never be fired. Dedicated consumer will receive un-routable message.
