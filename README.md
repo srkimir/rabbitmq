@@ -63,3 +63,7 @@ channel.publish(config.EX.name, routingKey, content, {mandatory: true}, onConfir
 }
 [30/11/2017 13:07:58.935] [LOG]   Message acked on publisher side
 ```
+
+**3. Persistent message is confirmed when it is persisted to disk or when it is enqueued**
+
+Only the first causes a confirm to be sent. Every published message will be confirmed sooner or later and no message will be confirmed more than once
