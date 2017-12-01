@@ -1,7 +1,7 @@
 # rabbitmq
 ### Mandatory flag and pubisher confirms
 
-**1. transient (non persistent) message is confirmed (Acked) the moment it is enqueued**
+**1. transient (non persistent) message is confirmed (Acked) the moment it is enqueued</span>**
 ```
 [20/11/2017 13:44:37.800] [LOG]   Consumer connected, awaiting for messages
 [20/11/2017 13:44:45.229] [LOG]   Publisher connected
