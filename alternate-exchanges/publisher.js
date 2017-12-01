@@ -18,7 +18,9 @@ amqplib.connect(config.RABBIT_MQ)
 
     const routingKey = 'whatever.b.c'
     const content = Buffer.from('test')
-    const options = {}
+    const options = {
+      mandatory: true
+    }
     
     console.log('Publisher about to publish message')
     channel.publish(config.EX.name, routingKey, content, options)
