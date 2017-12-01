@@ -76,4 +76,4 @@ Only the first causes a confirm to be sent. Every published message will be conf
 [01/12/2017 14:21:15.175] [LOG]   Unroutable message received test
 ```
 
-Now when publishing with mandatory: true, Basic.Return wont be issued to publisher. So registering event handler for `return` on given channel will never be fired. Dedicated consumer will receive un-routable message.
+Now when publishing with `mandatory: true`, `Basic.Return` wont be issued to publisher. So registering event handler for `return` on given channel will never be fired. Dedicated consumer will receive un-routable message.
