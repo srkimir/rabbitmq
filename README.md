@@ -69,6 +69,8 @@ channel.publish(config.EX.name, routingKey, content, {mandatory: true}, onConfir
 Only the first causes a confirm to be sent. Every published message will be confirmed sooner or later and no message will be confirmed more than once
 
 ### Alternate exchanges
+Dedicated exchange where un-routable message will go.
+
 ```
 [01/12/2017 14:21:06.503] [LOG]   Consumer connected, awaiting for messages
 [01/12/2017 14:21:15.171] [LOG]   Publisher connected
