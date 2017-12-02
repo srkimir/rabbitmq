@@ -1,5 +1,6 @@
-## Mandatory flag and pubisher confirms
+## Delivery guarantee
 
+### Mandatory flag and pubisher confirms
 **1. transient (non persistent) message is confirmed (Acked) the moment it is enqueued</span>**
 ```
 [20/11/2017 13:44:37.800] [LOG]   Consumer connected, awaiting for messages
