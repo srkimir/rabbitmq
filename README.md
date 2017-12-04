@@ -79,3 +79,6 @@ Dedicated exchange where un-routable message will go.
 ```
 
 Now when publishing with `mandatory: true`, `Basic.Return` wont be issued to publisher. So registering event handler for `return` on given channel will never be fired. Dedicated consumer will receive un-routable message.
+
+## TCP Backpressure
+https://github.com/squaremo/amqp.node/issues/365
