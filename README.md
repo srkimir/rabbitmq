@@ -1,7 +1,7 @@
 ## Delivery guarantee
 
 ### Mandatory flag and pubisher confirms
-1. transient (non persistent) message is confirmed (Acked) the moment it is enqueued</span>**
+1. transient (non persistent) message is confirmed (Acked) the moment it is enqueued</span>
 ```
 [20/11/2017 13:44:37.800] [LOG]   Consumer connected, awaiting for messages
 [20/11/2017 13:44:45.229] [LOG]   Publisher connected
@@ -10,7 +10,7 @@
 * [20/11/2017 13:44:45.234] [LOG]   Consumer received message, working...
 [20/11/2017 13:44:50.236] [LOG]   Consumer processed message
 ```
-2. An `un-routable` mandatory message is confirmed right after the `basic.return`**
+2. An `un-routable` mandatory message is confirmed right after the `basic.return`
 
 From publisher perspective while using `publishier confirms` this one gets tricky.
 
