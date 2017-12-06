@@ -80,5 +80,9 @@ Dedicated exchange where un-routable message will go.
 
 Now when publishing with `mandatory: true`, `Basic.Return` wont be issued to publisher. So registering event handler for `return` on given channel will never be fired. Dedicated consumer will receive un-routable message.
 
+### Highly available queues
+This implies that you have cluster of RabbitMQ servers. By default even if you have one, queue exists at only one server, where it was firstly declared. This works by passing `policy` when queue is about to be declared. Policy will tell where your mirrored(slaves) queues
+will be declared. Messages published to the queue are replicated to all mirrors. Consumers are connected to the master regardless of which node they connect to, with mirrors dropping messages that have been acknowledged at the master. If node where master is goes down, next master is oldest mirror.
+
 ## TCP Backpressure
 https://github.com/squaremo/amqp.node/issues/365
