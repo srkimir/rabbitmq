@@ -1,3 +1,25 @@
+## Message acknowledgements
+Section 3.1.8 https://www.rabbitmq.com/resources/specs/amqp0-9-1.pdf
+
+Message acknowledgement is mechanism provided to consumer application to inform RabbitMQ server about message handling results.
+Consumer application (if in acknowledgement mode, `{noAck: true | false}`) can either send `ack`, `nack` or `reject`
+
+1. `ack`, once sent from consumer application to broker will signal to broker that message was `successfully` processed.
+It is up to consumer application to define what does it mean to `successfully` process the message. When broker
+receives `ack` it will remove message from queue permanently.
+
+2. `nack`, once sent from consumer application will signal to broker that message was **not** successfully processed.
+By default, 'nack' will put the message back in the queue **for later handling.** Here term **for later handling** is tricky
+and will be explained above.
+
+3. `reject`, the difference between `nack` and `reject` is in that broker will not requeue the message for later handling by default.
+One could look on `nack` vs `reject` like `recoverable` errors and `unrecoverable` errors respectively. It is possible to declare
+special type of exchange called `dead letter exchange` where all messagess will go if any of the following criteria:
+
+- The message is rejected (basic.reject or basic.nack) with requeue=false,
+- The TTL for the message expires; or
+- The queue length limit is exceeded.
+
 ## Delivery guarantee
 
 ### Mandatory flag and pubisher confirms
