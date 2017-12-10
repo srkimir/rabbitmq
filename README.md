@@ -25,6 +25,15 @@ Here TTL for the message should not be confused with the time for which broker w
 ### Messages that needs to be handled later (nack)
 Imagine the use case in which your consumer application is communication with 3rd party service via HTTP which is currently down for `N` minutes. Depending on your logic this can be considered as `recoverable` error if you are receiving lets say `5xx` back. It would make sense to retry and handle message a little bit later expecting that 3rd party service next time will be up and running.
 
+Doing the test that can be found under `nack-problem` folder yields following results:
+```
+[10/12/2017 19:20:59.769] [LOG]   Message received for the the 1 time
+...
+[10/12/2017 19:23:31.547] [LOG]   Message received for the the 246755 time
+```
+
+In two minutes broker re-delivered same message for `245 755` times. Probably not what you would expect nor probably you would want to handle recoverable errors in this manner. What we are doing is using some sort of expontential backoff strategy with custom RabbitMQ plugin that can be found on: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
+
 ## Delivery guarantee
 
 ### Mandatory flag and pubisher confirms
