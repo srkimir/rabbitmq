@@ -32,7 +32,10 @@ Doing the test that can be found under `nack-problem` folder yields following re
 [10/12/2017 19:23:31.547] [LOG]   Message received for the the 246755 time
 ```
 
-In two minutes broker requeue and delivered same message for `245 755` times. Probably not what you would expect nor probably you would want to handle recoverable errors in this manner. What we are doing is using some sort of expontential backoff strategy with custom RabbitMQ plugin that can be found on: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
+In two minutes broker on my machine requeue and delivered same message for `245 755` times. Probably not what you would expect nor probably you would want to handle recoverable errors in this manner. What we are doing is using some sort of expontential backoff strategy with custom RabbitMQ plugin that can be found on: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
+
+### Using delayed message exchange
+<img src="docs/delayedExchange.png" alt="delayed exchange" width="550px">
 
 ## Delivery guarantee
 
