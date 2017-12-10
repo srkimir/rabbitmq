@@ -20,6 +20,8 @@ special type of exchange called `dead letter exchange` where all messagess will 
 - The TTL for the message expires; or
 - The queue length limit is exceeded.
 
+Here TTL for the message should not be confused with the time for which broker will wait for any type of acknowledgement from consumer application, becase that time does not exists even if consumer needs very long time to send any type of acknowledgement. Broker will redeliver message only if consumer connection dies.
+
 ### Messages that needs to be handled later (nack)
 Imagine the use case in which your consumer application is communication with 3rd party service via HTTP which is currently down for `N` minutes. Depending on your logic this can be considered as `recoverable` error if you are receiving lets say `5xx` back. It would make sense to retry and handle message a little bit later expecting that 3rd party service next time will be up and running.
 
