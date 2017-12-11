@@ -29,17 +29,17 @@ By default, `nack` will put the message back in the queue **for later handling.*
 and will be explained below.
 
 3. `reject`, the difference between `nack` and `reject` is in that broker will not requeue the message for later handling by default.
-One could look on `nack` vs `reject` like `recoverable` errors and `unrecoverable` errors respectively. It is possible to declare
+One could look on `nack` vs `reject` like `recoverable errors` and `unrecoverable errors` respectively. It is possible to declare
 special type of exchange called `dead letter exchange` where all messagess will go if any of the following criteria are met.
 
-- The message is rejected (basic.reject or basic.nack) with requeue=false,
-- The TTL for the message expires; or
-- The queue length limit is exceeded.
+- The message is rejected (basic.reject or basic.nack) with requeue=false
+- The TTL for the message expires
+- The queue length limit is exceeded
 
-Here TTL for the message should not be confused with the time for which broker will wait for any type of acknowledgement from consumer application, because that time does not exists even if consumer needs very long time to send any type of acknowledgement. If consumer connection dies, broker will try to deliver message to next consumer if any, if next consumer does not exists it will redeliver the message when consumer reconnect. If consume is not in confirmation mode (`noAck: true`) that will not happen, broker will deliver message and will not inspect anything back.
+Here TTL for the message should not be confused with the time for which broker will wait for any type of acknowledgement from consumer application, because that time does not exists even if consumer needs very long time to send any type of acknowledgement. If consumer connection dies, broker will try to deliver message to next consumer if any, if next consumer does not exists it will redeliver the message when consumer reconnect. If consume is not in confirmation mode (`noAck: true`) that will not happen, once broker deliver the message will not expect anything back nor it will react when and if consumer connection dies.
 
 ### Messages that needs to be handled later (nack)
-Imagine the use case in which your consumer application is communication with 3rd party service via HTTP which is currently down for `N` minutes. Depending on your logic this can be considered as `recoverable` error if you are receiving lets say `5xx` back. It would make sense to retry and handle message a little bit later expecting that 3rd party service next time will be up and running.
+Lets say that your consumer application is communicating with third party service via HTTP which is currently down for `N` minutes. Depending on your logic this can be considered as `recoverable error` if you are receiving for example `5xx` back. It would make sense to retry and handle message a little bit later expecting that 3rd party service next time will be up and running.
 
 Running `consumer-problem.js` and `publisher.js` that can be found under `nack-problem-and-solution` folder yields following results:
 ```
@@ -48,18 +48,17 @@ Running `consumer-problem.js` and `publisher.js` that can be found under `nack-p
 [10/12/2017 19:23:31.547] [LOG]   Message received for the the 246755 time
 ```
 
-In two minutes broker requeue and delivered same message for `245 755` times. Probably not what you would expect nor probably you would want to handle recoverable errors in this manner. One solution to this problem is using some sort of expontential backoff strategy
-(or whatever strategy you choose) with custom RabbitMQ plugin that can be found on: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
+In couple of minutes broker requeue and delivered same message for `245.755` times. Probably not what you would expect nor probably you would want to handle `recoverable errors` in this manner. One solution to this problem is using some sort of expontential backoff strategy (or whatever strategy you choose) with custom RabbitMQ plugin that can be found on: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
 
 ### Using delayed message exchange
 <img src="docs/delayedExchange.png" alt="delayed exchange" width="550px">
 
-Following test just mimics `success`, `recoverable` and `unrecoverable errors`. Consumer will generate new random number
-between `1` and `10` on each message delivery, where if:
+Following test just mimics `success`, `recoverable` and `unrecoverable errors` in a way that consumer will generate new random number
+between `1` and `10` on each message delivery, where:
 ```
-randomNumber = 1 => Success, consumer will do ACK
-randomNumber = 2 => Unrecoverable errors, consumer will do REJECT
-randomNumber from [3, 10] segment => Recoverable error, consumer will REPUBLISH do delayed exchange
+if randomNumber equals 1 => Success, consumer will ACK message
+if randomNumber equals 2 => Unrecoverable error, consumer will REJECT message
+if randomNumber falls in [3, 10] segment => Recoverable error, consumer will REPUBLISH message to delayed exchange
 ```
 
 Now running `consumer-solution.js` and `publisher.js` under `nack-problem-and-solution` folder yields following results:
@@ -71,12 +70,11 @@ Now running `consumer-solution.js` and `publisher.js` under `nack-problem-and-so
 [11/12/2017 20:53:22.185] [LOG]   New message received
 [11/12/2017 20:53:22.185] [LOG]   It was 1 consumer successfully processed message, acking...
 ```
-If we would translate this to more realistic scenario, it is like consumer application for the first two times received
-`5xx` from 3rd party service, but third time it was `200`. This example is using constant retry strategy where message will
-be republished every 2 seconds to delayed exchange. There are many ways to improve example, such as defining maximum number
+Now instead bombarding consumer application with new delivery for hundred thousand of times we are able to control that and reduce that
+to just couple of times. If we would translate this to more realistic scenario, it is like consumer application for the first two times received `5xx` from third party service, but third time it was `200`. This example is using constant retry strategy where message will
+be republished every two seconds to delayed exchange. There are many ways to improve example, such as defining maximum number
 of times that same message can be handled again. If you reach maximum number you could reject the message. Besides that you could use exponential backoff strategy and republish the message every 2, 4, 8, 16, ... seconds. Example is using `fanout` as an type for
-delayed exchange, but in more complex system it would be better to use `direct` type when more than one queue exists. In that case you
-could bind queue with delayed exchange where `bindingKey` would be equal to queue name. That is just one way of handling that.
+delayed exchange (send message to all queues exchange knows about ignoring the routing key), but in more complex system it would be better to use `direct` type when more than one queue exists. In that case you could bind queue with delayed exchange where `bindingKey` would be equal to queue name. That is just one way of handling that.
 
 ### Complete picture with dead lettter exchange in place
 <img src="docs/deadLetterExchange.png" alt="dead letter exchange" width="550px">
