@@ -1,15 +1,15 @@
 ## Message acknowledgements
-Section 3.1.8 https://www.rabbitmq.com/resources/specs/amqp0-9-1.pdf
 
 Message acknowledgement is mechanism provided to consumer application to inform RabbitMQ server about message handling results.
-Consumer application (if in acknowledgement mode, `{noAck: true | false}`) can either send `ack`, `nack` or `reject`
+Consumer application (if in acknowledgement mode, `{noAck: true | false}`) can either send `ack`, `nack` or `reject` signals
+back to broker.
 
 1. `ack`, once sent from consumer application to broker will signal to broker that message was `successfully` processed.
 It is up to consumer application to define what does it mean to `successfully` process the message. When broker
 receives `ack` it will remove message from queue permanently.
 
 2. `nack`, once sent from consumer application will signal to broker that message was **not** successfully processed.
-By default, 'nack' will put the message back in the queue **for later handling.** Here term **for later handling** is tricky
+By default, `nack` will put the message back in the queue **for later handling.** Here term **for later handling** is tricky
 and will be explained above.
 
 3. `reject`, the difference between `nack` and `reject` is in that broker will not requeue the message for later handling by default.
@@ -20,22 +20,45 @@ special type of exchange called `dead letter exchange` where all messagess will 
 - The TTL for the message expires; or
 - The queue length limit is exceeded.
 
-Here TTL for the message should not be confused with the time for which broker will wait for any type of acknowledgement from consumer application, becase that time does not exists even if consumer needs very long time to send any type of acknowledgement. Broker will redeliver message only if consumer connection dies.
+Here TTL for the message should not be confused with the time for which broker will wait for any type of acknowledgement from consumer application, because that time does not exists even if consumer needs very long time to send any type of acknowledgement. If consumer connection dies, broker will try to deliver message to next consumer if any, if next consumer does not exists it will redeliver the message when consumer reconnect.
 
 ### Messages that needs to be handled later (nack)
 Imagine the use case in which your consumer application is communication with 3rd party service via HTTP which is currently down for `N` minutes. Depending on your logic this can be considered as `recoverable` error if you are receiving lets say `5xx` back. It would make sense to retry and handle message a little bit later expecting that 3rd party service next time will be up and running.
 
-Doing the test that can be found under `nack-problem` folder yields following results:
+Running `consumer-problem.js` and `publisher.js` that can be found under `nack-problem-and-solution` folder yields following results:
 ```
 [10/12/2017 19:20:59.769] [LOG]   Message received for the the 1 time
 ...
 [10/12/2017 19:23:31.547] [LOG]   Message received for the the 246755 time
 ```
 
-In two minutes broker on my machine requeue and delivered same message for `245 755` times. Probably not what you would expect nor probably you would want to handle recoverable errors in this manner. What we are doing is using some sort of expontential backoff strategy with custom RabbitMQ plugin that can be found on: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
+In two minutes broker requeue and delivered same message for `245 755` times. Probably not what you would expect nor probably you would want to handle recoverable errors in this manner. One solution to this problem is using some sort of expontential backoff strategy
+(or whatever strategy you choose) with custom RabbitMQ plugin that can be found on: https://github.com/rabbitmq/rabbitmq-delayed-message-exchange
 
 ### Using delayed message exchange
 <img src="docs/delayedExchange.png" alt="delayed exchange" width="550px">
+
+Following test just mimics `success`, `recoverable` and `unrecoverable errors`. Consumer will generate new random number
+between `1` and `10` on each message delivery, where if:
+```
+randomNumber = 1 => Success, consumer will do ACK
+randomNumber = 2 => Unrecoverable errors, consumer will do REJECT
+randomNumber from [3, 10] segment => Recoverable error, consumer will republish do delayed exchange
+```
+
+Now running `consumer-solution.js` and `publisher.js` under `nack-problem-and-solution` folder yields following results:
+```
+[11/12/2017 20:53:18.180] [LOG]   New message received
+[11/12/2017 20:53:18.180] [LOG]   It was from [3, 10], consumer will try to handle message again
+[11/12/2017 20:53:20.182] [LOG]   New message received
+[11/12/2017 20:53:20.182] [LOG]   It was from [3, 10], consumer will try to handle message again
+[11/12/2017 20:53:22.185] [LOG]   New message received
+[11/12/2017 20:53:22.185] [LOG]   It was 1 consumer successfully processed message, acking...
+```
+If we would translate this to more realistic scenario, it is like consumer application for the first two times received
+`5xx` from 3rd party service, but third time it was `200`. This example is using constant retry strategy where message will
+be republished every 2 seconds to delayed exchange. There are many ways to improve example, such as defining maximum number
+of times that same message can be handled again. If you reach maximum number you could reject the message. Besides that you could use exponential backoff strategy and republish the message every 2, 4, 8, 16, ... seconds.
 
 ## Delivery guarantee
 
