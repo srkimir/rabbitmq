@@ -5,6 +5,7 @@
 - [Message acknowledgements](#message-acknowledgements)
   - [Messages that needs to be handled later (nack)](#messages-that-needs-to-be-handled-later-nack)
   - [Using delayed message exchange](#using-delayed-message-exchange)
+  - [Complete picture with dead lettter exchange in place](#complete-picture-with-dead-lettter-exchange-in-place)
 - [Delivery guarantee](#delivery-guarantee)
   - [Mandatory flag and pubisher confirms](#mandatory-flag-and-pubisher-confirms)
   - [Alternate exchanges](#alternate-exchanges)
