@@ -30,13 +30,13 @@ and will be explained above.
 
 3. `reject`, the difference between `nack` and `reject` is in that broker will not requeue the message for later handling by default.
 One could look on `nack` vs `reject` like `recoverable` errors and `unrecoverable` errors respectively. It is possible to declare
-special type of exchange called `dead letter exchange` where all messagess will go if any of the following criteria:
+special type of exchange called `dead letter exchange` where all messagess will go if any of the following criteria are met.
 
 - The message is rejected (basic.reject or basic.nack) with requeue=false,
 - The TTL for the message expires; or
 - The queue length limit is exceeded.
 
-Here TTL for the message should not be confused with the time for which broker will wait for any type of acknowledgement from consumer application, because that time does not exists even if consumer needs very long time to send any type of acknowledgement. If consumer connection dies, broker will try to deliver message to next consumer if any, if next consumer does not exists it will redeliver the message when consumer reconnect.
+Here TTL for the message should not be confused with the time for which broker will wait for any type of acknowledgement from consumer application, because that time does not exists even if consumer needs very long time to send any type of acknowledgement. If consumer connection dies, broker will try to deliver message to next consumer if any, if next consumer does not exists it will redeliver the message when consumer reconnect. If consume is not in confirmation mode (`noAck: true`) that will not happen, broker will deliver message and will not inspect anything back.
 
 ### Messages that needs to be handled later (nack)
 Imagine the use case in which your consumer application is communication with 3rd party service via HTTP which is currently down for `N` minutes. Depending on your logic this can be considered as `recoverable` error if you are receiving lets say `5xx` back. It would make sense to retry and handle message a little bit later expecting that 3rd party service next time will be up and running.
