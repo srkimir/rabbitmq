@@ -1,3 +1,18 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [Message acknowledgements](#message-acknowledgements)
+  - [Messages that needs to be handled later (nack)](#messages-that-needs-to-be-handled-later-nack)
+  - [Using delayed message exchange](#using-delayed-message-exchange)
+- [Delivery guarantee](#delivery-guarantee)
+  - [Mandatory flag and pubisher confirms](#mandatory-flag-and-pubisher-confirms)
+  - [Alternate exchanges](#alternate-exchanges)
+  - [Highly available queues (redundant copies)](#highly-available-queues-redundant-copies)
+- [TCP Backpressure](#tcp-backpressure)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 ## Message acknowledgements
 
 Message acknowledgement is mechanism provided to consumer application to inform RabbitMQ server about message handling results.
