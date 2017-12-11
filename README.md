@@ -58,7 +58,12 @@ Now running `consumer-solution.js` and `publisher.js` under `nack-problem-and-so
 If we would translate this to more realistic scenario, it is like consumer application for the first two times received
 `5xx` from 3rd party service, but third time it was `200`. This example is using constant retry strategy where message will
 be republished every 2 seconds to delayed exchange. There are many ways to improve example, such as defining maximum number
-of times that same message can be handled again. If you reach maximum number you could reject the message. Besides that you could use exponential backoff strategy and republish the message every 2, 4, 8, 16, ... seconds.
+of times that same message can be handled again. If you reach maximum number you could reject the message. Besides that you could use exponential backoff strategy and republish the message every 2, 4, 8, 16, ... seconds. Example is using `fanout` as an type for
+delayed exchange, but in more complex system it would be better to use `direct` type when more than one queue exists. In that case you
+could bind queue with delayed exchange where `bindingKey` would be equal to queue name. That is just one way of handling that.
+
+### Complete picture with dead lettter exchange in place
+<img src="docs/deadLetterExchange.png" alt="dead letter exchange" width="550px">
 
 ## Delivery guarantee
 
