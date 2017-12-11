@@ -26,7 +26,7 @@ receives `ack` it will remove message from queue permanently.
 
 2. `nack`, once sent from consumer application will signal to broker that message was **not** successfully processed.
 By default, `nack` will put the message back in the queue **for later handling.** Here term **for later handling** is tricky
-and will be explained above.
+and will be explained below.
 
 3. `reject`, the difference between `nack` and `reject` is in that broker will not requeue the message for later handling by default.
 One could look on `nack` vs `reject` like `recoverable` errors and `unrecoverable` errors respectively. It is possible to declare
