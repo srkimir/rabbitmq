@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "amqplib": "^0.5.2",
-    "console-stamp": "^0.2.6"
+    "console-stamp": "^0.2.6",
+    "lodash": "^4.17.4"
   }
 }
