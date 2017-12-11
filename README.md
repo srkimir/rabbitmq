@@ -43,7 +43,7 @@ between `1` and `10` on each message delivery, where if:
 ```
 randomNumber = 1 => Success, consumer will do ACK
 randomNumber = 2 => Unrecoverable errors, consumer will do REJECT
-randomNumber from [3, 10] segment => Recoverable error, consumer will republish do delayed exchange
+randomNumber from [3, 10] segment => Recoverable error, consumer will REPUBLISH do delayed exchange
 ```
 
 Now running `consumer-solution.js` and `publisher.js` under `nack-problem-and-solution` folder yields following results:
