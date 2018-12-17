@@ -15,6 +15,7 @@
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Message acknowledgements
+https://www.rabbitmq.com/confirms.html
 
 Message acknowledgement is mechanism provided to consumer application to inform RabbitMQ server about message handling results.
 Consumer application (if in acknowledgement mode, `{noAck: true | false}`) can either send `ack`, `nack` or `reject` signals
